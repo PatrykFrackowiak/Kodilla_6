@@ -1,71 +1,47 @@
 'use strict'
 
-
-function generateTitleLinks() {
-    const selectors = {
-        article: '.post',
-        title: '.post-title',
-        titleList: '.titles'
-    };
-
-    const generate = function () {
-        const generatedLinks = generateNewLinks();
-        document.querySelector(selectors.titleList).innerHTML = generatedLinks;
-        addEventListenerToTitleLinks();
-    }
-
-    const generateNewLinks = function() {
-        let links = '';
-        for (let article of document.querySelectorAll(selectors.article)) {
-            const articleId = article.getAttribute('id');
-            const articleTitle = article.querySelector(selectors.title).innerHTML;
-            const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
-            links += linkHTML;
-        }
-        return links;
-    }
-
-    generate();
-}
-
 const addEventListenerToTitleLinks = function () {
     for (let link of document.querySelectorAll('.titles a')) {
         link.addEventListener('click', titleClickHandler);
     }
 }
 
+const generateTitleLinks = function () {
+    const SELECTOR = {
+        ARTICLE: '.post',
+        TITLE: '.post-title',
+        TITLE_LIST: '.titles'
+    };
+
+    let links = '';
+    for (let article of document.querySelectorAll(SELECTOR.ARTICLE)) {
+        const articleId = article.getAttribute('id');
+        const articleTitle = article.querySelector(SELECTOR.TITLE).innerHTML;
+        const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+        links += linkHTML;
+    }
+
+    document.querySelector(SELECTOR.TITLE_LIST).innerHTML = links;
+    addEventListenerToTitleLinks();
+}
+
+const changeActiveElement = (element, elementSelector) => {
+    for (let activeLink of document.querySelectorAll(elementSelector + '.active')) {
+        activeLink.classList.remove('active');
+    }
+    element.classList.add('active');
+}
+
 const titleClickHandler = function (event) {
-    const handle = function (clickedElement) {
-        console.log('Link was clicked!');
-        event.preventDefault();
-        deactivateLinks()
-        activateLink(clickedElement);
-        deactivateArticles();
-        activateArticle(clickedElement);
-    }
-
-    const deactivateLinks = function () {
-        for (let activeLink of document.querySelectorAll('.titles a.active')) {
-            activeLink.classList.remove('active');
-        }
-    }
-
-    const activateLink = function (link) {
-        link.classList.add('active');
-    }
-
-    const deactivateArticles = function () {
-        for (let activeLink of document.querySelectorAll('article.active')) {
-            activeLink.classList.remove('active');
-        }
-    }
-
-    const activateArticle = function (link) {
-        const articleId = link.getAttribute('href');
-        const article = document.querySelector(articleId);
-        article.classList.add('active');
-    }
-
-    handle(this);
+    const SELECTOR = {
+        ARTICLE: '.article',
+        TITLELINK: '.titles a',
+    };
+    
+    event.preventDefault();
+    changeActiveElement(this, SELECTOR.TITLELINK);
+    const articleId = link.getAttribute('href');
+    const article = document.querySelector(articleId);
+    changeActiveElement(article, SELECTOR.ARTICLE);
 }
 
