@@ -26,7 +26,7 @@ const generateTitleLinks = function () {
 }
 
 const changeActiveElement = (element, elementSelector) => {
-    for (let activeLink of document.querySelectorAll(elementSelector + '.active')) {
+    for (let activeLink of document.querySelectorAll(elementSelector)) {
         activeLink.classList.remove('active');
     }
     element.classList.add('active');
@@ -34,13 +34,13 @@ const changeActiveElement = (element, elementSelector) => {
 
 const titleClickHandler = function (event) {
     const SELECTOR = {
-        ARTICLE: '.article',
-        TITLELINK: '.titles a',
+        ARTICLE: 'article.active',
+        TITLELINK: '.titles a.active',
     };
     
     event.preventDefault();
     changeActiveElement(this, SELECTOR.TITLELINK);
-    const articleId = link.getAttribute('href');
+    const articleId = this.getAttribute('href');
     const article = document.querySelector(articleId);
     changeActiveElement(article, SELECTOR.ARTICLE);
 }
