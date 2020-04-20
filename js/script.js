@@ -2,6 +2,6 @@
 {
   generateTitleLinks();
   generateTags();
-  addClickListenersToTags();
+  generateAuthors();
 }
 

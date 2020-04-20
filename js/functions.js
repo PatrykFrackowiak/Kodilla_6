@@ -5,10 +5,11 @@ const generateTags = () => {
     let tagsWrapper = article.querySelector('.post-tags .list');
     let tagsWrapperHtml = '';
     for (let tag of article.getAttribute('data-tags').split(' ')) {
-      tagsWrapperHtml += `<li><a href="#tag-${tag}">${tag}</a></li>`;
+      tagsWrapperHtml += `<li><a href="#tag-${tag}">${tag}</a></li>\n`;
     }
     tagsWrapper.innerHTML = tagsWrapperHtml;
   }
+  addClickListenersToTags();
 };
 
 const tagClickHandler = function (event) {

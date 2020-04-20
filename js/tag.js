@@ -9,6 +9,7 @@ const generateTags = () => {
     }
     tagsWrapper.innerHTML = tagsWrapperHtml;
   }
+  addClickListenersToTags();
 };
 
 const tagClickHandler = function (event) {
