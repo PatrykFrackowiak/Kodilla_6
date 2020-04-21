@@ -1,6 +1,5 @@
 'use strict';
 
-
 const generateTags = () => {
   let allTags = [];
   for (let article of document.querySelectorAll('article')) {
@@ -19,14 +18,20 @@ const generateTags = () => {
 
   const tagList = document.querySelector('.tags');
   let allTagsHTML = '';
-  const tagsParams = calculateTagsParams(allTags);
+  const tagsParams = calculateMinMaxPair(allTags);
   for (let tag in allTags) {
-    const tagSize = calculateTagClass(allTags[tag], tagsParams);
+    const tagSize = calculateSizeClass(allTags[tag], tagsParams, 5);
     allTagsHTML += `<li><a href="#tag-${tag}" class="tag-size-${tagSize}">${tag} (${allTags[tag]})</a></li>\n`;
   }
   tagList.innerHTML = allTagsHTML;
 
   addClickListenersToTags();
+};
+
+const addClickListenersToTags = () => {
+  for (let link of document.querySelectorAll('a[href^="#tag-"]')) {
+    link.addEventListener('click', tagClickHandler);
+  }
 };
 
 const tagClickHandler = function (event) {
@@ -42,30 +47,3 @@ const tagClickHandler = function (event) {
   generateTitleLinks('[data-tags~="' + tag + '"]');
 };
 
-const addClickListenersToTags = () => {
-  for (let link of document.querySelectorAll('.post-tags a')) {
-    link.addEventListener('click', tagClickHandler);
-  }
-  for (let link of document.querySelectorAll('.tags a')) {
-    link.addEventListener('click', tagClickHandler);
-  }
-};
-
-const calculateTagsParams = (allTags) => {
-  let min = Number.MAX_VALUE, max = 0;
-  for (let occurences of Object.values(allTags)) {
-    if (occurences < min) {
-      min = occurences;
-    }
-    if (occurences > max) {
-      max = occurences;
-    }
-  }
-  return { 'min': min, 'max': max };
-};
-
-const calculateTagClass = (tag, tagParams) => {
-  const numberOfBuckets = 5;
-  const bucketSize = (tagParams['max'] - tagParams['min'] ) / (numberOfBuckets-1);
-  return Math.floor((tag - tagParams['min']) / bucketSize) + 1;
-};
