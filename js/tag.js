@@ -1,14 +1,31 @@
 'use strict';
 
+
 const generateTags = () => {
+  let allTags = [];
   for (let article of document.querySelectorAll('article')) {
     let tagsWrapper = article.querySelector('.post-tags .list');
     let tagsWrapperHtml = '';
     for (let tag of article.getAttribute('data-tags').split(' ')) {
       tagsWrapperHtml += `<li><a href="#tag-${tag}">${tag}</a></li>\n`;
+      if (!allTags[tag]) {
+        allTags[tag] = 1;
+      } else {
+        allTags[tag]++;
+      }
     }
     tagsWrapper.innerHTML = tagsWrapperHtml;
   }
+
+  const tagList = document.querySelector('.tags');
+  let allTagsHTML = '';
+  const tagsParams = calculateTagsParams(allTags);
+  for (let tag in allTags) {
+    const tagSize = calculateTagClass(allTags[tag], tagsParams);
+    allTagsHTML += `<li><a href="#tag-${tag}" class="tag-size-${tagSize}">${tag} (${allTags[tag]})</a></li>\n`;
+  }
+  tagList.innerHTML = allTagsHTML;
+
   addClickListenersToTags();
 };
 
@@ -34,3 +51,21 @@ const addClickListenersToTags = () => {
   }
 };
 
+const calculateTagsParams = (allTags) => {
+  let min = Number.MAX_VALUE, max = 0;
+  for (let occurences of Object.values(allTags)) {
+    if (occurences < min) {
+      min = occurences;
+    }
+    if (occurences > max) {
+      max = occurences;
+    }
+  }
+  return { 'min': min, 'max': max };
+};
+
+const calculateTagClass = (tag, tagParams) => {
+  const numberOfBuckets = 5;
+  const bucketSize = (tagParams['max'] - tagParams['min'] ) / (numberOfBuckets-1);
+  return Math.floor((tag - tagParams['min']) / bucketSize) + 1;
+};
