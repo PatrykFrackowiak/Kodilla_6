@@ -4,8 +4,8 @@ const generateAuthors = () => {
   let allAuthors = [];
   for (let article of document.querySelectorAll('article')) {
     const author = article.getAttribute('data-author');
+    const htmlAuthor = templates.authorLink({ author: author });
     const title = article.querySelector('.post-title');
-    const htmlAuthor = `<a class="post-author" href="#author-${author}">By ${author}<a/>`;
     title.insertAdjacentHTML('afterend', htmlAuthor);
 
     if (!allAuthors[author]) {
@@ -15,15 +15,18 @@ const generateAuthors = () => {
     }
   }
 
-  let authorHtml = '';
+  let authorsData = { authors: [] };
   const minMaxPair = calculateMinMaxPair(allAuthors);
   for (let author in allAuthors) {
-    const authorSize = calculateSizeClass(allAuthors[author], minMaxPair, 3);
-    authorHtml += `<li><a href="#author-${author}"><span class="author-name author-size-${authorSize}">${author} (${allAuthors[author]})</span></a></li>\n`;
+    authorsData.authors.push({
+      author: author,
+      count: allAuthors[author],
+      className: "author-size-" + calculateSizeClass(allAuthors[author], minMaxPair, 3)
+    })
   }
 
   const authors = document.querySelector('.authors');
-  authors.insertAdjacentHTML('beforeend', authorHtml);
+  authors.innerHTML = templates.authorCloudLink(authorsData);
 
   addClickListenersToAuthors();
 };

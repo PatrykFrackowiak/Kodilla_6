@@ -6,7 +6,7 @@ const generateTags = () => {
     let tagsWrapper = article.querySelector('.post-tags .list');
     let tagsWrapperHtml = '';
     for (let tag of article.getAttribute('data-tags').split(' ')) {
-      tagsWrapperHtml += `<li><a href="#tag-${tag}">${tag}</a></li>\n`;
+      tagsWrapperHtml += templates.tagLink({ tag: tag });
       if (!allTags[tag]) {
         allTags[tag] = 1;
       } else {
@@ -17,13 +17,16 @@ const generateTags = () => {
   }
 
   const tagList = document.querySelector('.tags');
-  let allTagsHTML = '';
+  let allTagsData = { tags: []};
   const tagsParams = calculateMinMaxPair(allTags);
   for (let tag in allTags) {
-    const tagSize = calculateSizeClass(allTags[tag], tagsParams, 5);
-    allTagsHTML += `<li><a href="#tag-${tag}" class="tag-size-${tagSize}">${tag} (${allTags[tag]})</a></li>\n`;
+    allTagsData.tags.push({
+      tag: tag,
+      count: allTags[tag],
+      className: "tag-size-" + calculateSizeClass(allTags[tag], tagsParams, 5)
+    });
   }
-  tagList.innerHTML = allTagsHTML;
+  tagList.innerHTML = templates.tagCloudLink(allTagsData);
 
   addClickListenersToTags();
 };
