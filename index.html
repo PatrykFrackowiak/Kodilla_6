@@ -229,13 +229,17 @@
     </div>
   </div>
   <script id="template-article-link" type="text/x-handlebars-template">
+    {{#each links}}
     <li><a href="#{{ id }}"><span>{{ title }}</span></a></li>
+    {{/each}}
   </script>
   <script id="template-article-author-link" type="text/x-handlebars-template">
     <a class="post-author" href="#author-{{ author }}">By {{ author }}</a>
   </script>
   <script id="template-article-tag-link" type="text/x-handlebars-template">
-    <li><a href="#tag-{{ tag }}">{{ tag }}</a></li>
+    {{#each tags}}
+    <li><a href="#tag-{{ this }}">{{ this }}</a></li>
+    {{/each}}
   </script>
   <script id="template-cloud-tag-link" type="text/x-handlebars-template">
     {{#each tags}}

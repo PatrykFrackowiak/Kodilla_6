@@ -4,16 +4,15 @@ const generateTags = () => {
   let allTags = [];
   for (let article of document.querySelectorAll('article')) {
     let tagsWrapper = article.querySelector('.post-tags .list');
-    let tagsWrapperHtml = '';
-    for (let tag of article.getAttribute('data-tags').split(' ')) {
-      tagsWrapperHtml += templates.tagLink({ tag: tag });
+    const tags = article.getAttribute('data-tags').split(' ');
+    for (let tag of tags) {
       if (!allTags[tag]) {
         allTags[tag] = 1;
       } else {
         allTags[tag]++;
       }
     }
-    tagsWrapper.innerHTML = tagsWrapperHtml;
+    tagsWrapper.innerHTML =  templates.tagLink({tags:tags});
   }
 
   const tagList = document.querySelector('.tags');
